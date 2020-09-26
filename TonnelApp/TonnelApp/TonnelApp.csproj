@@ -43,11 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IRobotController.cs" />
+    <Compile Include="Interfaces\ISimulator.cs" />
+    <Compile Include="Interfaces\ISimulatorStatistics.cs" />
+    <Compile Include="Interfaces\ITunnelGenerator.cs" />
+    <Compile Include="Models\SegmentModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Simulator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
