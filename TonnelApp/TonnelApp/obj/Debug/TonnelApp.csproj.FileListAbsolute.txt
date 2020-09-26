@@ -1,6 +1,5 @@
 C:\MyProject\SoftServe\Tonnel_Application\TonnelApp\TonnelApp\bin\Debug\TonnelApp.exe.config
 C:\MyProject\SoftServe\Tonnel_Application\TonnelApp\TonnelApp\bin\Debug\TonnelApp.exe
 C:\MyProject\SoftServe\Tonnel_Application\TonnelApp\TonnelApp\bin\Debug\TonnelApp.pdb
-C:\MyProject\SoftServe\Tonnel_Application\TonnelApp\TonnelApp\obj\Debug\TonnelApp.csprojAssemblyReference.cache
 C:\MyProject\SoftServe\Tonnel_Application\TonnelApp\TonnelApp\obj\Debug\TonnelApp.exe
 C:\MyProject\SoftServe\Tonnel_Application\TonnelApp\TonnelApp\obj\Debug\TonnelApp.pdb
