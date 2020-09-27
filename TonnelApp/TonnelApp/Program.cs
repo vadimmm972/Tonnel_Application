@@ -12,7 +12,13 @@ namespace TonnelApp
         static void Main(string[] args)
         {
             Services.Simulator simulatore = new Services.Simulator();
-            simulatore.GenerateTunnelFromFile(6, Directory.GetCurrentDirectory()+"\\Generation\\Initialization.txt");
+            simulatore.GenerateTunnelFromFile(3, Directory.GetCurrentDirectory()+"\\Generation\\Initialization.txt");
+            simulatore.StepForward = 4;
+            simulatore.MoveForward();
+            simulatore.MoveBackward();
+            Console.ReadKey();
+
+
         }
     }
 }
