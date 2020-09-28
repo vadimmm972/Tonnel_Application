@@ -9,25 +9,34 @@ using TonnelApp.Models;
 
 namespace TonnelApp.Services
 {
-    class Simulator : ITunnelGenerator , ISimulator
+    class Simulator : ITunnelGenerator , ISimulator, ISimulatorStatistics
     {
         public delegate void SimulatorHandler(string message);
         public event SimulatorHandler Notify;
         public List<SegmentModel> Segments;
         private Random rand;
         private int CurrentPosition;
+        private int PreviousSteps; // counter previous steps
         public int StepForward; //  number of  steps forward
         private int StepBack;  // number of  steps back
         public bool IsWorkingProcess;
         public bool IsEndPosition;
-
+        private StatisticModel statistic;
         public Simulator()
+        {
+            InitializationOfData();
+        }
+        public void InitializationOfData()
         {
             Segments = new List<SegmentModel>();
             rand = new Random();
             CurrentPosition = 0;
             StepForward = 0;
             StepBack = 0;
+            statistic = new StatisticModel();
+            statistic.TimeToMove = 2;
+            statistic.TimeToSwitch = 1;
+            Notify += DisplayMessage;
         }
         public void GenerateRandomTunnel(int tunnelLength)
         {
@@ -82,16 +91,10 @@ namespace TonnelApp.Services
             }
 
         }
-
         public bool IsLightOn()
         {
             return Segments[CurrentPosition].IsLightOn == 1 ? true : false;
-            //if (Segments[CurrentPosition].IsLightOn == 1)
-            //    return true;
-            //else
-            //     return false;
         }
-
         public void MoveForward()
         {
             try
@@ -101,21 +104,14 @@ namespace TonnelApp.Services
                     if (CurrentPosition >= Segments.Count)
                         CurrentPosition = 0;
 
-                    if (IsLightOn() && i == 0)
-                    {
-                        SwitchLight();
-                    }
-                    else if (!IsLightOn() && i < StepForward)
-                    {
-                        SwitchLight();
-                    }
-                    else if (i == StepForward  && !IsLightOn())
+                    if (IsLightOn() && i == 0 || !IsLightOn() && i < StepForward || i == StepForward && !IsLightOn())
                     {
                         SwitchLight();
                     }
                     if(i != StepForward)
                     {
                         CurrentPosition++;
+                        statistic.StepsCounter++;
                     }
                     
                 }
@@ -139,11 +135,12 @@ namespace TonnelApp.Services
                     {
                         Console.WriteLine("The end of  the tonnel !!! ");
                     }
-                    else
+                    if(i != 0)
                     {
-                        IsLightOn();
+                        CurrentPosition--;
+                        statistic.StepsCounter++;
                     }
-                    CurrentPosition--;
+                   
                 }
             }
             catch(Exception ex)
@@ -158,6 +155,26 @@ namespace TonnelApp.Services
                 Segments[CurrentPosition].IsLightOn = 0;
             else
                 Segments[CurrentPosition].IsLightOn = 1;
+
+            statistic.SwitchedTime++;
+        }
+
+        public void PrintStatistics()
+        {
+            StatisticService statisticService = new StatisticService(statistic);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\t\tStatistic");
+            Console.WriteLine($"Switching time: {statisticService.CalculateSwitchingTime()}");
+            Console.WriteLine($"Moving time: {statisticService.CalculateMovingTime()}");
+            Console.WriteLine($"Average time by section: {statisticService.ClculateAverageTimeBySection()}");
+            Console.WriteLine($"Elapsed time: {statisticService.CalculateElapsedTime()}\n");
+            Console.ResetColor();
+        }
+        private static void DisplayMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(message);
+            Console.ResetColor();
         }
     }
 }

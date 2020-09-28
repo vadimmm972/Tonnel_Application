@@ -16,6 +16,7 @@ namespace TonnelApp
             simulatore.StepForward = 4;
             simulatore.MoveForward();
             simulatore.MoveBackward();
+            simulatore.PrintStatistics();
             Console.ReadKey();
 
 
