@@ -57,9 +57,6 @@ namespace TonnelApp.Services
                         if (j == 0 && simulator.IsLightOn())
                         {
                             IsEndPosition = true;
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.WriteLine("End of the tunnel !!! ");
-                            Console.ResetColor();
                         }
 
                     }

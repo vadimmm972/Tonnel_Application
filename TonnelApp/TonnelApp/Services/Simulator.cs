@@ -12,8 +12,8 @@ namespace TonnelApp.Services
     class Simulator : ITunnelGenerator , ISimulator, ISimulatorStatistics
     {
         public delegate void SimulatorHandler(string message);
-        public event SimulatorHandler Notify;
-        public List<SegmentModel> Segments;
+        private event SimulatorHandler Notify;
+        private List<SegmentModel> Segments;
         private Random rand;
         private int CurrentPosition;
         private int MaxLenght;
@@ -26,10 +26,10 @@ namespace TonnelApp.Services
         }
         private void CheckLengthOfTonnel(ref int tunnelLength)
         {
-            if (tunnelLength < 3)
-                tunnelLength = 3;
-            if (tunnelLength > 1000000)
-                tunnelLength = 1000000;
+            if (tunnelLength < MinLength)
+                tunnelLength = MinLength;
+            if (tunnelLength > MaxLenght)
+                tunnelLength = MaxLenght;
         }
         public void InitializationOfData()
         {
