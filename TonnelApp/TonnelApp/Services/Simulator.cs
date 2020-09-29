@@ -16,32 +16,38 @@ namespace TonnelApp.Services
         public List<SegmentModel> Segments;
         private Random rand;
         private int CurrentPosition;
-        private int PreviousSteps; // counter previous steps
-        public int StepForward; //  number of  steps forward
-        private int StepBack;  // number of  steps back
-        public bool IsWorkingProcess;
-        public bool IsEndPosition;
-        private StatisticModel statistic;
+        private int MaxLenght;
+        private int MinLength;
+
+        public StatisticModel statistic;
         public Simulator()
         {
             InitializationOfData();
+        }
+        private void CheckLengthOfTonnel(ref int tunnelLength)
+        {
+            if (tunnelLength < 3)
+                tunnelLength = 3;
+            if (tunnelLength > 1000000)
+                tunnelLength = 1000000;
         }
         public void InitializationOfData()
         {
             Segments = new List<SegmentModel>();
             rand = new Random();
             CurrentPosition = 0;
-            StepForward = 0;
-            StepBack = 0;
             statistic = new StatisticModel();
             statistic.TimeToMove = 2;
             statistic.TimeToSwitch = 1;
             Notify += DisplayMessage;
+            MaxLenght = 1000000;
+            MinLength = 3;
         }
         public void GenerateRandomTunnel(int tunnelLength)
         {
             try
             {
+                CheckLengthOfTonnel(ref tunnelLength);
                 for (int i = 0; i < tunnelLength; i++)
                 {
                     Segments.Add(new SegmentModel() { IsLightOn = rand.Next(0, 2) });
@@ -56,6 +62,8 @@ namespace TonnelApp.Services
         {
             try
             {
+                CheckLengthOfTonnel(ref tunnelLength);
+
                 int sizeFile = 0;
                 using (StreamReader sr = new StreamReader(inputFileName, Encoding.Default))
                 {
@@ -99,22 +107,11 @@ namespace TonnelApp.Services
         {
             try
             {
-                for (int i = 0; i <= StepForward; i++)
-                {
-                    if (CurrentPosition >= Segments.Count)
-                        CurrentPosition = 0;
+                    CurrentPosition++;
+                    statistic.StepsCounter++;
 
-                    if (IsLightOn() && i == 0 || !IsLightOn() && i < StepForward || i == StepForward && !IsLightOn())
-                    {
-                        SwitchLight();
-                    }
-                    if(i != StepForward)
-                    {
-                        CurrentPosition++;
-                        statistic.StepsCounter++;
-                    }
-                    
-                }
+                if (CurrentPosition >= Segments.Count)
+                    CurrentPosition = 0;
             }
             catch(Exception ex)
             {
@@ -126,22 +123,10 @@ namespace TonnelApp.Services
         {
             try
             {
-                for (int i = StepForward; i >= 0; i--)
-                {
-                    if (CurrentPosition < 0)
-                        CurrentPosition = Segments.Count - 1;
-
-                    if(i == 0 && IsLightOn())
-                    {
-                        Console.WriteLine("The end of  the tonnel !!! ");
-                    }
-                    if(i != 0)
-                    {
-                        CurrentPosition--;
-                        statistic.StepsCounter++;
-                    }
-                   
-                }
+                CurrentPosition--;
+                statistic.StepsCounter++;
+                if (CurrentPosition < 0)
+                    CurrentPosition = Segments.Count - 1;
             }
             catch(Exception ex)
             {
@@ -164,10 +149,11 @@ namespace TonnelApp.Services
             StatisticService statisticService = new StatisticService(statistic);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\t\tStatistic");
-            Console.WriteLine($"Switching time: {statisticService.CalculateSwitchingTime()}");
-            Console.WriteLine($"Moving time: {statisticService.CalculateMovingTime()}");
-            Console.WriteLine($"Average time by section: {statisticService.ClculateAverageTimeBySection()}");
-            Console.WriteLine($"Elapsed time: {statisticService.CalculateElapsedTime()}\n");
+            Console.WriteLine($"Segments count: {statistic.SegmentsCount}");
+            Console.WriteLine($"Switching time: {TimeSpan.FromSeconds(statisticService.CalculateSwitchingTime()).ToString(@"hh\:mm\:ss\:ff")}");
+            Console.WriteLine($"Moving time: {TimeSpan.FromSeconds(statisticService.CalculateMovingTime()).ToString(@"hh\:mm\:ss\:ff")}");
+            Console.WriteLine($"Average time by section: {TimeSpan.FromSeconds(statisticService.ClculateAverageTimeBySection()).ToString(@"hh\:mm\:ss\:ff")}");
+            Console.WriteLine($"Elapsed time: {TimeSpan.FromSeconds(statisticService.CalculateElapsedTime()).ToString(@"hh\:mm\:ss\:ff")}\n");
             Console.ResetColor();
         }
         private static void DisplayMessage(string message)
