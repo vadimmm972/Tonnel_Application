@@ -74,7 +74,7 @@ namespace TonnelApp.Services
                 {
                     string line;
 
-                    while ((line = sr.ReadLine()) != null)
+                    while ((line = sr.ReadLine()) != null && sizeFile < tunnelLength)
                     {
                         if (!String.IsNullOrEmpty(line))
                         {
