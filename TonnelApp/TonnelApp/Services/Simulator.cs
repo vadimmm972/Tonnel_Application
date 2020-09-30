@@ -30,6 +30,11 @@ namespace TonnelApp.Services
                 tunnelLength = MinLength;
             if (tunnelLength > MaxLenght)
                 tunnelLength = MaxLenght;
+
+            if(Segments.Count > 0)
+            {
+                Segments.Clear();
+            }
         }
         public void InitializationOfData()
         {
@@ -146,10 +151,11 @@ namespace TonnelApp.Services
 
         public void PrintStatistics()
         {
-            StatisticService statisticService = new StatisticService(statistic);
+            StatisticService statisticService = new StatisticService(statistic); 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\t\tStatistic");
             Console.WriteLine($"Segments count: {statistic.SegmentsCount}");
+            Console.WriteLine($"Number of steps: {statistic.StepsCounter}");
             Console.WriteLine($"Switching time: {TimeSpan.FromSeconds(statisticService.CalculateSwitchingTime()).ToString(@"hh\:mm\:ss\:ff")}");
             Console.WriteLine($"Moving time: {TimeSpan.FromSeconds(statisticService.CalculateMovingTime()).ToString(@"hh\:mm\:ss\:ff")}");
             Console.WriteLine($"Average time by section: {TimeSpan.FromSeconds(statisticService.ClculateAverageTimeBySection()).ToString(@"hh\:mm\:ss\:ff")}");
