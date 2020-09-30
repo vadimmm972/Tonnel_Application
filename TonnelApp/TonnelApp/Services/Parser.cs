@@ -17,7 +17,6 @@ namespace TonnelApp.Services
             count = 0;
         }
 
-
         public void Run()
         {
             bool flag = true;
@@ -50,7 +49,7 @@ namespace TonnelApp.Services
                             break;
                         default:
                             Console.Clear();
-                            Console.WriteLine("Invalid data, try again: ");
+                            ErrorMessages("Invalid data, try again !");
                             break;
                     }
                 }
@@ -96,9 +95,7 @@ namespace TonnelApp.Services
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("The tunnel has been generated successfully !");
-                Console.ResetColor();
+                ErrorMessages("The tunnel hasn't been generated !");
             }
             Stop();
         }
@@ -117,9 +114,7 @@ namespace TonnelApp.Services
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("The tunnel hasn't been generated !");
-                Console.ResetColor();
+                ErrorMessages("The tunnel hasn't been generated !");
             }
             Stop();
         }
@@ -129,6 +124,13 @@ namespace TonnelApp.Services
             Console.WriteLine("Press any key to continue..");
             Console.ReadKey();
             Console.Clear();
+        }
+
+        public void ErrorMessages(string errorMessage)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(errorMessage);
+            Console.ResetColor();
         }
     }
 }
