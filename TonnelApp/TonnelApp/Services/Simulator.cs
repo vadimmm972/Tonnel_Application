@@ -45,7 +45,7 @@ namespace TonnelApp.Services
             statistic.TimeToMove = 2;
             statistic.TimeToSwitch = 1;
             Notify += DisplayMessage;
-            MaxLenght = 1000000;
+            MaxLenght = 100000000;
             MinLength = 3;
         }
         public void GenerateRandomTunnel(int tunnelLength)
